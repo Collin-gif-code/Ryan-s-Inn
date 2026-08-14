@@ -333,12 +333,13 @@ input[type="range"]{width:100%}
 
 /* HISTORY */
 .timeline{position:relative;margin-top:35px}
-.timeline:before{content:"";position:absolute;left:120px;top:0;bottom:0;width:1px;background:var(--line)}
-.timeline-item{display:grid;grid-template-columns:95px 1fr;gap:45px;margin-bottom:26px}
-.timeline-year{color:var(--gold2);font-size:1.5rem;text-align:right;padding-top:18px}
-.timeline-card{padding:22px;position:relative}
-.timeline-card:before{content:"";position:absolute;left:-52px;top:26px;width:12px;height:12px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 5px #07130e}
+.timeline:before{content:"";position:absolute;left:129px;top:15px;bottom:15px;width:1px;background:var(--line);z-index:0}
+.timeline-item{display:grid;grid-template-columns:105px 1fr;gap:48px;margin-bottom:26px;position:relative}
+.timeline-year{position:relative;z-index:2;align-self:start;justify-self:end;margin-top:12px;color:var(--gold2);font-size:1.28rem;font-weight:700;line-height:1;padding:9px 11px;border:1px solid var(--line);border-radius:999px;background:#07130e;box-shadow:0 0 0 6px #07130e;white-space:nowrap}
+.timeline-card{padding:22px;position:relative;z-index:1}
+.timeline-card:before{content:"";position:absolute;left:-55px;top:26px;width:12px;height:12px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 5px #07130e;z-index:2}
 .timeline-card h3{margin:0 0 8px;font-size:1.4rem}
+.timeline-card p{line-height:1.6}
 
 /* GALLERY */
 .gallery-grid{columns:3 260px;column-gap:14px}
@@ -418,9 +419,9 @@ footer{border-top:1px solid var(--line);padding:30px 0 38px;margin-top:10px;back
   .detail-facts{grid-template-columns:repeat(2,1fr)}
   .tasting-notes-grid{grid-template-columns:1fr}
   .options{grid-template-columns:1fr}
-  .timeline:before{left:8px}
-  .timeline-item{grid-template-columns:1fr;gap:8px;padding-left:30px}
-  .timeline-year{text-align:left}
+  .timeline:before{left:8px;top:18px;bottom:18px}
+  .timeline-item{grid-template-columns:1fr;gap:10px;padding-left:30px}
+  .timeline-year{justify-self:start;margin-top:0;box-shadow:0 0 0 5px #07130e}
   .timeline-card:before{left:-28px}
   .footer-grid{grid-template-columns:1fr 1fr}
 }
@@ -786,25 +787,30 @@ footer{border-top:1px solid var(--line);padding:30px 0 38px;margin-top:10px;back
     <div class="page-title">
       <div class="kicker">Since 2012</div>
       <h1>Our Story</h1>
-      <p class="page-intro">Ryan's Inn deserves more than a paragraph wedged underneath a stock photo. This timeline is ready for your real milestones, renovations, first bottles, legendary evenings and other family folklore.</p>
+      <p class="page-intro">From a private pub to an ever-growing collection, Ryan's Inn has been changing, expanding and collecting stories since 2012.</p>
     </div>
 
     <div class="timeline">
       <div class="timeline-item">
         <div class="timeline-year">2012</div>
-        <article class="card timeline-card"><h3>Ryan's Inn is established</h3><p class="muted">The beginning. Replace this text later with the real origin story, first photos and the people involved.</p></article>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-year">2015</div>
-        <article class="card timeline-card"><h3>The collection grows</h3><p class="muted">A placeholder milestone for the first point at which “a few bottles” became suspiciously close to “a collection”.</p></article>
+        <article class="card timeline-card">
+          <h3>Ryan's Inn is born</h3>
+          <p class="muted">Ryan's Inn is established. What starts as a private pub becomes the beginning of a place built around good evenings, good company and, increasingly, a serious number of whiskey bottles.</p>
+        </article>
       </div>
       <div class="timeline-item">
         <div class="timeline-year">2020</div>
-        <article class="card timeline-card"><h3>A new chapter</h3><p class="muted">Add renovations, additions to the pub, special bottles or memorable events here.</p></article>
+        <article class="card timeline-card">
+          <h3>The wall comes down</h3>
+          <p class="muted">During the coronavirus period, on Ryan's birthday, the wall is literally torn down and the pub is expanded. It marks the biggest transformation of Ryan's Inn so far. Since then, the pub has continued to evolve, with plenty of changes, additions and new bottles finding their way onto the shelves.</p>
+        </article>
       </div>
       <div class="timeline-item">
         <div class="timeline-year">2026</div>
-        <article class="card timeline-card"><h3>Ryan's Inn goes digital</h3><p class="muted">The collection, history and tasting games finally get their own website.</p></article>
+        <article class="card timeline-card">
+          <h3>Ryan's Inn goes online</h3>
+          <p class="muted">The pub gets its own digital home. The whiskey collection, tasting notes, games, memories and history of Ryan's Inn can now live together in one place.</p>
+        </article>
       </div>
     </div>
   </div>
