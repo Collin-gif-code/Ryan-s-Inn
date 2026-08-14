@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0d241b" />
+
+  <title>Ryan's Inn | Private Pub</title>
+  <meta
+    name="description"
+    content="Ryan's Inn — Private Pub, Est. 2012."
+  />
+
+  <style>
+    :root {
+      --green-950: #07130f;
+      --green-900: #0d241b;
+      --green-800: #153427;
+      --green-700: #1c4935;
+      --gold: #c89b52;
+      --gold-light: #e2c48c;
+      --cream: #f3ead7;
+      --cream-muted: #cfc4ad;
+      --ink: #151713;
+      --panel: rgba(14, 36, 27, 0.92);
+      --border: rgba(200, 155, 82, 0.35);
+      --shadow: 0 18px 60px rgba(0, 0, 0, 0.32);
+      --radius: 20px;
+      --content: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(37, 77, 55, 0.22), transparent 32rem),
+        linear-gradient(180deg, #0a1712 0%, #07110d 100%);
+      color: var(--cream);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height: 100vh;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button,
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .container {
+      width: min(calc(100% - 32px), var(--content));
+      margin-inline: auto;
+    }
+
+    /* ---------- HEADER ---------- */
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--border);
+      background: rgba(7, 19, 15, 0.88);
+      backdrop-filter: blur(14px);
+    }
+
+    .nav {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .brand-mark {
+      width: 46px;
+      aspect-ratio: 1;
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: var(--gold-light);
+      font-family: Georgia, serif;
+      font-weight: 700;
+      font-size: 1.3rem;
+      background: rgba(200, 155, 82, 0.08);
+    }
+
+    .brand-name {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+
+    .brand-subtitle {
+      color: var(--gold-light);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      margin-top: 2px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .nav-link {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: var(--cream-muted);
+      padding: 10px 13px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: 160ms ease;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      color: var(--cream);
+      background: rgba(200, 155, 82, 0.1);
+    }
+
+    .mobile-menu-button {
+      display: none;
+    }
+
+    /* ---------- PAGE SYSTEM ---------- */
+
+    .page {
+      display: none;
+      animation: pageIn 220ms ease both;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes pageIn {
+      from {
+        opacity: 0;
+        transform: translateY(5px);
+      }
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    /* ---------- HOME ---------- */
+
+    .hero {
+      min-height: 620px;
+      display: grid;
+      align-items: end;
+      padding: 90px 0 64px;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border);
+      background:
+        linear-gradient(90deg, rgba(6, 13, 10, 0.94) 0%, rgba(6, 13, 10, 0.68) 48%, rgba(6, 13, 10, 0.35) 100%),
+        url("images/pub/hero.jpg") center / cover no-repeat;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 60%, #08130f 100%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 760px;
+    }
+
+    .eyebrow {
+      color: var(--gold-light);
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      font-size: 0.74rem;
+      font-weight: 700;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 600;
+      line-height: 1.05;
+    }
+
+    .hero h1 {
+      margin: 12px 0 12px;
+      font-size: clamp(4rem, 9vw, 7.4rem);
+      letter-spacing: -0.045em;
+    }
+
+    .hero-subtitle {
+      color: var(--cream-muted);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.2rem, 2vw, 1.6rem);
+      margin-bottom: 30px;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .button {
+      appearance: none;
+      border: 1px solid var(--gold);
+      border-radius: 999px;
+      padding: 13px 20px;
+      cursor: pointer;
+      transition: 160ms ease;
+      background: var(--gold);
+      color: #15130e;
+      font-weight: 700;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.06);
+    }
+
+    .button.secondary {
+      color: var(--cream);
+      background: rgba(13, 36, 27, 0.78);
+    }
+
+    .section {
+      padding: 72px 0;
+    }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+
+    .section-title h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin: 4px 0 0;
+    }
+
+    .muted {
+      color: var(--cream-muted);
+    }
+
+    .panel {
+      background:
+        linear-gradient(145deg, rgba(21, 52, 39, 0.96), rgba(8, 24, 18, 0.96));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .pour-card {
+      display: grid;
+      grid-template-columns: 220px 1fr auto;
+      align-items: center;
+      gap: 34px;
+      padding: 30px;
+      min-height: 290px;
+    }
+
+    .bottle-placeholder {
+      height: 230px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      border: 1px dashed rgba(226, 196, 140, 0.22);
+      color: var(--cream-muted);
+      background: rgba(255, 255, 255, 0.025);
+      text-align: center;
+      padding: 16px;
+    }
+
+    .pour-card h3 {
+      margin: 7px 0 8px;
+      font-size: 2.15rem;
+    }
+
+    .tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .tag {
+      display: inline-flex;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: rgba(200, 155, 82, 0.12);
+      border: 1px solid rgba(200, 155, 82, 0.22);
+      color: var(--gold-light);
+      font-size: 0.82rem;
+    }
+
+    .pour-actions {
+      display: grid;
+      gap: 10px;
+      min-width: 165px;
+    }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .quick-card {
+      min-height: 180px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background:
+        linear-gradient(180deg, rgba(7, 19, 15, 0.2), rgba(7, 19, 15, 0.94)),
+        linear-gradient(145deg, #214b37, #0a1913);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: end;
+      cursor: pointer;
+      transition: 180ms ease;
+    }
+
+    .quick-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(226, 196, 140, 0.65);
+    }
+
+    .quick-card h3 {
+      margin: 7px 0 4px;
+      font-size: 1.5rem;
+    }
+
+    .collection-preview {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .collection-summary {
+      padding: 28px;
+    }
+
+    .collection-number {
+      font-family: Georgia, serif;
+      font-size: 4.3rem;
+      line-height: 1;
+      color: var(--gold-light);
+      margin: 8px 0;
+    }
+
+    .bottle-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .bottle-card {
+      padding: 18px;
+      min-height: 240px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .bottle-card h3 {
+      margin: 12px 0 6px;
+      font-size: 1.08rem;
+      line-height: 1.25;
+    }
+
+    .bottle-card p {
+      margin: 4px 0;
+      font-size: 0.86rem;
+      color: var(--cream-muted);
+    }
+
+    .mood-grid {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .mood-button {
+      appearance: none;
+      border-radius: 999px;
+      padding: 12px 17px;
+      border: 1px solid var(--border);
+      color: var(--cream);
+      background: rgba(21, 52, 39, 0.72);
+      cursor: pointer;
+    }
+
+    .mood-button:hover {
+      border-color: var(--gold);
+      color: var(--gold-light);
+    }
+
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 0.65fr;
+      gap: 18px;
+    }
+
+    .spotlight,
+    .fact-card {
+      padding: 30px;
+      min-height: 260px;
+    }
+
+    .spotlight h3,
+    .fact-card h3 {
+      font-size: 1.8rem;
+      margin: 7px 0 12px;
+    }
+
+    /* ---------- OTHER PAGES ---------- */
+
+    .inner-page {
+      padding: 80px 0 110px;
+      min-height: 70vh;
+    }
+
+    .inner-page h1 {
+      font-size: clamp(3rem, 7vw, 5rem);
+      margin: 10px 0 16px;
+    }
+
+    .placeholder {
+      margin-top: 36px;
+      padding: 40px;
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      color: var(--cream-muted);
+      min-height: 240px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+    }
+
+    /* ---------- FOOTER ---------- */
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 34px 0 46px;
+      color: var(--cream-muted);
+      font-size: 0.9rem;
+    }
+
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      align-items: center;
+    }
+
+    /* ---------- RESPONSIVE ---------- */
+
+    @media (max-width: 900px) {
+      .nav-links {
+        display: none;
+      }
+
+      .mobile-menu-button {
+        display: inline-flex;
+      }
+
+      .pour-card {
+        grid-template-columns: 150px 1fr;
+      }
+
+      .pour-actions {
+        grid-column: 1 / -1;
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .quick-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .collection-preview {
+        grid-template-columns: 1fr;
+      }
+
+      .bottle-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .hero {
+        min-height: 560px;
+      }
+
+      .hero h1 {
+        font-size: 3.8rem;
+      }
+
+      .section {
+        padding: 52px 0;
+      }
+
+      .pour-card {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .bottle-placeholder {
+        height: 180px;
+      }
+
+      .pour-actions {
+        grid-template-columns: 1fr;
+      }
+
+      .quick-grid,
+      .bottle-grid,
+      .bottom-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-row {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="#home" data-route="home" aria-label="Ryan's Inn Home">
+        <div class="brand-mark">R</div>
+        <div>
+          <div class="brand-name">Ryan's Inn</div>
+          <div class="brand-subtitle">Est. 2012</div>
+        </div>
+      </a>
+
+      <nav class="nav-links" aria-label="Main navigation">
+        <button class="nav-link active" data-route="home">Home</button>
+        <button class="nav-link" data-route="collection">Collection</button>
+        <button class="nav-link" data-route="finder">Whiskey Finder</button>
+        <button class="nav-link" data-route="games">Games</button>
+        <button class="nav-link" data-route="history">History</button>
+      </nav>
+
+      <button class="button secondary mobile-menu-button" type="button">
+        Menu
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ========================= HOME ========================= -->
+    <section class="page active" id="page-home">
+      <section class="hero">
+        <div class="container hero-content">
+          <div class="eyebrow">Private Pub</div>
+          <h1>Ryan's Inn</h1>
+          <div class="hero-subtitle">A place for good pours, long evenings and better stories. · Est. 2012</div>
+
+          <div class="button-row">
+            <button class="button" data-route="history">Explore the Pub</button>
+            <button class="button secondary" data-route="collection">Whiskey Collection</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-title">
+            <div>
+              <div class="eyebrow">From the shelf</div>
+              <h2>Tonight's Pour</h2>
+            </div>
+          </div>
+
+          <article class="panel pour-card">
+            <div class="bottle-placeholder" id="pour-image">
+              Bottle image
+            </div>
+
+            <div>
+              <div class="eyebrow" id="pour-origin">Ireland</div>
+              <h3 id="pour-name">Loading...</h3>
+              <p class="muted" id="pour-meta"></p>
+              <p id="pour-description"></p>
+              <div class="tags" id="pour-tags"></div>
+            </div>
+
+            <div class="pour-actions">
+              <button class="button" id="view-pour">View Bottle</button>
+              <button class="button secondary" id="pick-another">↻ Pick Another</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="quick-grid">
+            <article class="quick-card" data-route="collection">
+              <div class="eyebrow">01</div>
+              <h3>Collection</h3>
+              <div class="muted">Browse every bottle in the library.</div>
+            </article>
+
+            <article class="quick-card" data-route="finder">
+              <div class="eyebrow">02</div>
+              <h3>Whiskey Finder</h3>
+              <div class="muted">Find a bottle to match the mood.</div>
+            </article>
+
+            <article class="quick-card" data-route="games">
+              <div class="eyebrow">03</div>
+              <h3>Tasting Games</h3>
+              <div class="muted">Play, sip and test the palate.</div>
+            </article>
+
+            <article class="quick-card" data-route="history">
+              <div class="eyebrow">04</div>
+              <h3>Our Story</h3>
+              <div class="muted">The people, the place and the history.</div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-title">
+            <div>
+              <div class="eyebrow">The shelves</div>
+              <h2>The Collection</h2>
+            </div>
+          </div>
+
+          <div class="collection-preview">
+            <article class="panel collection-summary">
+              <div class="eyebrow">Currently catalogued</div>
+              <div class="collection-number" id="collection-count">0</div>
+              <div class="muted">bottles in Ryan's Inn</div>
+
+              <div style="height: 24px"></div>
+
+              <button class="button secondary" data-route="collection">
+                View Full Collection
+              </button>
+            </article>
+
+            <div class="bottle-grid" id="home-bottle-grid"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-title">
+            <div>
+              <div class="eyebrow">Whiskey Finder</div>
+              <h2>What are you in the mood for?</h2>
+            </div>
+          </div>
+
+          <div class="mood-grid">
+            <button class="mood-button" data-mood="sweet">🍯 Sweet</button>
+            <button class="mood-button" data-mood="smoky">🔥 Smoky</button>
+            <button class="mood-button" data-mood="fruity">🍎 Fruity</button>
+            <button class="mood-button" data-mood="spicy">🌶️ Spicy</button>
+            <button class="mood-button" data-mood="oaky">🪵 Rich & Oaky</button>
+            <button class="mood-button" data-mood="random">★ Surprise Me</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container bottom-grid">
+          <article class="panel spotlight">
+            <div class="eyebrow">Bottle Spotlight</div>
+            <h3 id="spotlight-name">A bottle worth knowing</h3>
+            <p class="muted" id="spotlight-text">
+              Spotlight content will come from the whiskey database.
+            </p>
+            <button class="button secondary" data-route="collection">
+              Explore the Collection
+            </button>
+          </article>
+
+          <article class="panel fact-card">
+            <div class="eyebrow">Did you know?</div>
+            <h3>From the Inn</h3>
+            <p id="pub-fact">
+              Ryan's Inn was established in 2012.
+            </p>
+          </article>
+        </div>
+      </section>
+    </section>
+
+    <!-- ====================== COLLECTION ====================== -->
+    <section class="page inner-page" id="page-collection">
+      <div class="container">
+        <div class="eyebrow">The library</div>
+        <h1>Collection</h1>
+        <p class="muted">
+          Every bottle in Ryan's Inn. Search, filters and bottle detail views will live here.
+        </p>
+        <div class="placeholder">
+          Collection page — next build step.
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================== FINDER ======================== -->
+    <section class="page inner-page" id="page-finder">
+      <div class="container">
+        <div class="eyebrow">Choose your dram</div>
+        <h1>Whiskey Finder</h1>
+        <p class="muted" id="finder-intro">
+          Filter the collection by flavour, origin, style and more.
+        </p>
+        <div class="placeholder">
+          Whiskey Finder — coming in a later build step.
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================== GAMES ========================= -->
+    <section class="page inner-page" id="page-games">
+      <div class="container">
+        <div class="eyebrow">Tasting room</div>
+        <h1>Games</h1>
+        <p class="muted">
+          Blind tasting, bottle guessing and other questionable tests of human judgement.
+        </p>
+        <div class="placeholder">
+          Tasting games — coming in a later build step.
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= HISTORY ======================== -->
+    <section class="page inner-page" id="page-history">
+      <div class="container">
+        <div class="eyebrow">Since 2012</div>
+        <h1>Our Story</h1>
+        <p class="muted">
+          The history of Ryan's Inn, told properly rather than buried in a paragraph nobody reads.
+        </p>
+        <div class="placeholder">
+          Timeline and gallery — coming in a later build step.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-row">
+      <div>
+        <strong>Ryan's Inn</strong><br />
+        Private Pub · Est. 2012
+      </div>
+      <div>Sláinte.</div>
+    </div>
+  </footer>
+
+  <script>
+    /* ==========================================================
+       RYAN'S INN
+       Everything application-related stays here for now.
+       Whiskey data itself lives in /data/whiskeys.json.
+       ========================================================== */
+
+    let whiskeys = [];
+    let currentPour = null;
+
+    const pubFacts = [
+      "Ryan's Inn was established in 2012.",
+      "Every bottle in the collection has its own story.",
+      "The best whiskey is usually the one shared at the right moment.",
+      "The collection is loaded directly from a static JSON file."
+    ];
+
+    // ---------- ROUTING ----------
+
+    function showPage(route, updateHash = true) {
+      const validRoutes = ["home", "collection", "finder", "games", "history"];
+      const safeRoute = validRoutes.includes(route) ? route : "home";
+
+      document.querySelectorAll(".page").forEach(page => {
+        page.classList.toggle("active", page.id === `page-${safeRoute}`);
+      });
+
+      document.querySelectorAll(".nav-link").forEach(link => {
+        link.classList.toggle("active", link.dataset.route === safeRoute);
+      });
+
+      if (updateHash) {
+        history.replaceState(null, "", `#${safeRoute}`);
+      }
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.addEventListener("click", event => {
+      const routeTarget = event.target.closest("[data-route]");
+
+      if (routeTarget) {
+        event.preventDefault();
+        showPage(routeTarget.dataset.route);
+      }
+    });
+
+    window.addEventListener("hashchange", () => {
+      showPage(location.hash.replace("#", "") || "home", false);
+    });
+
+    // ---------- DATA ----------
+
+    async function loadWhiskeys() {
+      try {
+        const response = await fetch("data/whiskeys.json");
+
+        if (!response.ok) {
+          throw new Error(`Could not load whiskey data (${response.status})`);
+        }
+
+        whiskeys = await response.json();
+
+        renderHome();
+      } catch (error) {
+        console.error(error);
+
+        document.getElementById("pour-name").textContent = "Collection unavailable";
+        document.getElementById("pour-description").textContent =
+          "The whiskey JSON could not be loaded.";
+      }
+    }
+
+    // ---------- HOME ----------
+
+    function renderHome() {
+      document.getElementById("collection-count").textContent = whiskeys.length;
+
+      renderCollectionPreview();
+      pickRandomPour();
+      renderSpotlight();
+      renderRandomFact();
+    }
+
+    function renderCollectionPreview() {
+      const grid = document.getElementById("home-bottle-grid");
+      const bottles = whiskeys.slice(0, 4);
+
+      grid.innerHTML = bottles.map(whiskey => `
+        <article class="bottle-card">
+          <div class="eyebrow">${escapeHtml(whiskey.country)}</div>
+          <h3>${escapeHtml(whiskey.name)}</h3>
+          <p>${escapeHtml(whiskey.type)}</p>
+          <p>${whiskey.age ? `${escapeHtml(String(whiskey.age))} Years · ` : ""}${escapeHtml(String(whiskey.abv))}% ABV</p>
+        </article>
+      `).join("");
+    }
+
+    function pickRandomPour() {
+      if (!whiskeys.length) return;
+
+      currentPour = whiskeys[Math.floor(Math.random() * whiskeys.length)];
+
+      document.getElementById("pour-origin").textContent = currentPour.country;
+      document.getElementById("pour-name").textContent = currentPour.name;
+      document.getElementById("pour-meta").textContent =
+        `${currentPour.type} · ${currentPour.age ? currentPour.age + " Years · " : ""}${currentPour.abv}% ABV`;
+      document.getElementById("pour-description").textContent =
+        currentPour.description || "";
+
+      document.getElementById("pour-tags").innerHTML =
+        (currentPour.flavours || [])
+          .slice(0, 4)
+          .map(tag => `<span class="tag">${escapeHtml(tag)}</span>`)
+          .join("");
+
+      const imageBox = document.getElementById("pour-image");
+
+      if (currentPour.image) {
+        imageBox.innerHTML = `
+          <img
+            src="${escapeHtml(currentPour.image)}"
+            alt="${escapeHtml(currentPour.name)}"
+            style="max-height: 220px; object-fit: contain;"
+          />
+        `;
+      } else {
+        imageBox.textContent = "Bottle image";
+      }
+    }
+
+    function renderSpotlight() {
+      if (!whiskeys.length) return;
+
+      const bottle = whiskeys.find(item => item.featured) || whiskeys[0];
+
+      document.getElementById("spotlight-name").textContent = bottle.name;
+      document.getElementById("spotlight-text").textContent =
+        bottle.description || `${bottle.country} · ${bottle.type} · ${bottle.abv}% ABV`;
+    }
+
+    function renderRandomFact() {
+      document.getElementById("pub-fact").textContent =
+        pubFacts[Math.floor(Math.random() * pubFacts.length)];
+    }
+
+    document.getElementById("pick-another").addEventListener("click", pickRandomPour);
+
+    document.getElementById("view-pour").addEventListener("click", () => {
+      if (!currentPour) return;
+
+      // Later this will open a proper bottle detail view.
+      showPage("collection");
+    });
+
+    document.querySelectorAll("[data-mood]").forEach(button => {
+      button.addEventListener("click", () => {
+        const mood = button.dataset.mood;
+
+        showPage("finder");
+
+        document.getElementById("finder-intro").textContent =
+          mood === "random"
+            ? "Surprise me — choose something from the collection."
+            : `Showing the collection with a preference for ${mood} flavours.`;
+      });
+    });
+
+    // ---------- HELPERS ----------
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    // ---------- START ----------
+
+    showPage(location.hash.replace("#", "") || "home", false);
+    loadWhiskeys();
+  </script>
+</body>
+</html>
