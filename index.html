@@ -254,16 +254,33 @@ header{
 }
 
 /* FINDER */
-.finder-layout{display:grid;grid-template-columns:300px 1fr;gap:18px}
+.finder-modes{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:18px}
+.finder-mode.active{background:linear-gradient(180deg,#c29650,#8b5b20);color:#fff7e7}
+.finder-layout{display:grid;grid-template-columns:320px 1fr;gap:18px}
 .filters{padding:20px;position:sticky;top:95px;height:max-content}
 .filter-group{margin-bottom:20px}
 .filter-group label{display:block;margin-bottom:8px;color:var(--gold2)}
+.filter-note{font-size:.76rem;color:var(--muted);line-height:1.4;margin-top:6px}
 .range-row{display:grid;grid-template-columns:1fr 40px;gap:9px;align-items:center}
 input[type="range"]{width:100%}
+.advanced-tags{display:flex;flex-wrap:wrap;gap:7px;max-height:205px;overflow:auto;padding-right:4px}
+.flavour-chip{
+  border:1px solid var(--line);border-radius:999px;background:#0a251a;color:var(--cream);
+  padding:7px 10px;font-size:.76rem;transition:.14s ease
+}
+.flavour-chip:hover,.flavour-chip.active{border-color:var(--gold2);background:rgba(185,135,61,.2);color:#ffe9bf}
+.finder-check{display:flex;gap:9px;align-items:center;color:var(--cream);font-size:.88rem}
+.finder-check input{accent-color:var(--gold)}
+.finder-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .match-list{display:grid;gap:12px}
 .match-card{padding:18px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center}
 .match-score{font-size:2rem;color:var(--gold2)}
 .match-card h3{margin:0 0 6px}
+.match-reason{margin-top:9px;color:#d8c8aa;font-size:.82rem;line-height:1.45}
+.explore-controls{display:grid;gap:14px}
+.surprise-panel{padding:24px;text-align:center}
+.surprise-panel h2{font-size:2rem;margin:8px 0}
+.surprise-panel .btn{margin-top:12px}
 
 /* TASTING */
 .form-card{padding:25px}
@@ -481,12 +498,12 @@ footer{border-top:1px solid var(--line);padding:30px 0 38px;margin-top:10px;back
     <div class="wrap card mood-box">
       <h2>What are you in the mood for?</h2>
       <div class="mood-row">
-        <button class="pill mood-home" data-mood="sweet"> Sweet</button>
-        <button class="pill mood-home" data-mood="smoky"> Smoky</button>
-        <button class="pill mood-home" data-mood="fruity"> Fruity</button>
-        <button class="pill mood-home" data-mood="spicy"> Spicy</button>
-        <button class="pill mood-home" data-mood="oaky"> Rich & Oaky</button>
-        <button class="pill mood-home" data-mood="random"> Surprise Me</button>
+        <button class="pill mood-home" data-mood="sweet">🍯 Sweet</button>
+        <button class="pill mood-home" data-mood="smoky">🔥 Smoky</button>
+        <button class="pill mood-home" data-mood="fruity">🍎 Fruity</button>
+        <button class="pill mood-home" data-mood="spicy">🌶 Spicy</button>
+        <button class="pill mood-home" data-mood="oaky">🪵 Rich & Oaky</button>
+        <button class="pill mood-home" data-mood="random">★ Surprise Me</button>
       </div>
     </div>
   </section>
@@ -569,14 +586,22 @@ footer{border-top:1px solid var(--line);padding:30px 0 38px;margin-top:10px;back
     <div class="page-title">
       <div class="kicker">Find your dram</div>
       <h1>Whiskey Finder</h1>
-      <p class="page-intro">Tell the shelf what you feel like drinking. The matcher compares your preferences with the flavour tags in <code>whiskey.json</code>. No oracle, no cloud, just JavaScript doing its best impression of discernment.</p>
+      <p class="page-intro">Choose how you want to search the shelf: match a flavour profile, explore the collection by facts, or hand the decision over to chance.</p>
     </div>
-    <div class="finder-layout">
+
+    <div class="finder-modes">
+      <button class="btn finder-mode active" data-finder-mode="match">Match my taste</button>
+      <button class="btn finder-mode ghost" data-finder-mode="explore">Explore</button>
+      <button class="btn finder-mode ghost" data-finder-mode="surprise">Surprise me</button>
+    </div>
+
+    <div class="finder-layout" id="finderMatchMode">
       <aside class="card filters">
         <div class="filter-group">
           <label for="finderCountry">Country</label>
           <select class="select" id="finderCountry"><option value="">Any country</option></select>
         </div>
+
         <div class="filter-group">
           <label>Sweet</label>
           <div class="range-row"><input type="range" min="0" max="5" value="0" id="sweetRange"><span id="sweetValue">0</span></div>
@@ -597,9 +622,73 @@ footer{border-top:1px solid var(--line);padding:30px 0 38px;margin-top:10px;back
           <label>Oaky / Rich</label>
           <div class="range-row"><input type="range" min="0" max="5" value="0" id="oakyRange"><span id="oakyValue">0</span></div>
         </div>
-        <button class="btn gold" id="finderRandom" style="width:100%">Surprise Me</button>
+
+        <div class="filter-group">
+          <label>Advanced flavours</label>
+          <div class="filter-note">Select specific notes from the actual tasting tags in your collection.</div>
+          <div class="advanced-tags" id="advancedFlavours" style="margin-top:10px"></div>
+        </div>
+
+        <div class="filter-group">
+          <label class="finder-check"><input type="checkbox" id="finderOpenOnly"> Only bottles marked open</label>
+        </div>
+
+        <div class="finder-actions">
+          <button class="btn ghost" id="finderReset">Reset</button>
+          <button class="btn gold" id="finderRandom">Surprise Me</button>
+        </div>
       </aside>
       <div class="match-list" id="finderResults"></div>
+    </div>
+
+    <div class="finder-layout hidden" id="finderExploreMode">
+      <aside class="card filters">
+        <div class="explore-controls">
+          <div class="filter-group">
+            <label>Country</label>
+            <select class="select" id="exploreCountry"><option value="">Any country</option></select>
+          </div>
+          <div class="filter-group">
+            <label>Region</label>
+            <select class="select" id="exploreRegion"><option value="">Any region</option></select>
+          </div>
+          <div class="filter-group">
+            <label>Minimum age</label>
+            <select class="select" id="exploreAge">
+              <option value="">Any age</option>
+              <option value="10">10+ years</option>
+              <option value="12">12+ years</option>
+              <option value="15">15+ years</option>
+              <option value="18">18+ years</option>
+              <option value="21">21+ years</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>Minimum ABV</label>
+            <select class="select" id="exploreAbv">
+              <option value="">Any ABV</option>
+              <option value="43">43%+</option>
+              <option value="46">46%+</option>
+              <option value="50">50%+</option>
+              <option value="55">55%+</option>
+            </select>
+          </div>
+          <label class="finder-check"><input type="checkbox" id="exploreOpenOnly"> Only bottles marked open</label>
+          <button class="btn ghost" id="exploreReset">Reset filters</button>
+        </div>
+      </aside>
+      <div class="match-list" id="exploreResults"></div>
+    </div>
+
+    <div class="card surprise-panel hidden" id="finderSurpriseMode">
+      <div class="kicker">Leave it to the shelf</div>
+      <h2>One bottle. No overthinking.</h2>
+      <p class="muted">Choose from the complete collection or limit the draw to bottles currently marked open.</p>
+      <label class="finder-check" style="justify-content:center;margin:18px 0">
+        <input type="checkbox" id="surpriseOpenOnly"> Only bottles marked open
+      </label>
+      <button class="btn gold" id="surprisePick">Pick a Bottle</button>
+      <div id="surpriseResult" style="margin-top:22px"></div>
     </div>
   </div>
 </section>
@@ -1175,7 +1264,9 @@ document.getElementById("homeViewBottle").onclick=()=>currentPour&&openBottle(cu
 document.querySelectorAll(".mood-home").forEach(b=>b.onclick=()=>{
   const mood=b.dataset.mood;
   route("finder");
-  if(mood==="random"){finderRandom();return}
+  const matchButton=document.querySelector('[data-finder-mode="match"]');
+  if(matchButton)matchButton.click();
+  if(mood==="random"){finderRandom(false);return}
   const map={sweet:"sweetRange",smoky:"smokyRange",fruity:"fruityRange",spicy:"spicyRange",oaky:"oakyRange"};
   Object.values(map).forEach(id=>document.getElementById(id).value=0);
   if(map[mood])document.getElementById(map[mood]).value=5;
@@ -1188,7 +1279,11 @@ function populateFilters(){
   const types=[...new Set(whiskeys.map(w=>w.type))].sort();
   document.getElementById("countryFilter").innerHTML='<option value="">All countries</option>'+countries.map(x=>`<option>${esc(x)}</option>`).join("");
   document.getElementById("finderCountry").innerHTML='<option value="">Any country</option>'+countries.map(x=>`<option>${esc(x)}</option>`).join("");
+  document.getElementById("exploreCountry").innerHTML='<option value="">Any country</option>'+countries.map(x=>`<option>${esc(x)}</option>`).join("");
+  const regions=[...new Set(whiskeys.map(w=>w.region).filter(Boolean))].sort();
+  document.getElementById("exploreRegion").innerHTML='<option value="">Any region</option>'+regions.map(x=>`<option>${esc(x)}</option>`).join("");
   document.getElementById("typeFilter").innerHTML='<option value="">All styles</option>'+types.map(x=>`<option>${esc(x)}</option>`).join("");
+  renderAdvancedFlavours();
 }
 function renderCollection(){
   const q=document.getElementById("collectionSearch").value.toLowerCase().trim();
@@ -1268,36 +1363,223 @@ function toggleFavorite(id){
 
 /* FINDER */
 const rangeIds=["sweet","smoky","fruity","spicy","oaky"];
+let selectedAdvancedFlavours=new Set();
+let currentFinderMode="match";
+
+function canonicalTag(tag){
+  return String(tag||"").trim().toLowerCase();
+}
+function prettyTag(tag){
+  return String(tag||"").trim().replace(/^./,c=>c.toUpperCase());
+}
+function renderAdvancedFlavours(){
+  const counts={};
+  whiskeys.forEach(w=>w.flavours.forEach(tag=>{
+    const key=canonicalTag(tag);
+    if(key)counts[key]=(counts[key]||0)+1;
+  }));
+  const tags=Object.entries(counts)
+    .filter(([,count])=>count>=2)
+    .sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]))
+    .slice(0,32);
+
+  document.getElementById("advancedFlavours").innerHTML=tags.map(([tag,count])=>`
+    <button class="flavour-chip ${selectedAdvancedFlavours.has(tag)?"active":""}" data-flavour-tag="${esc(tag)}">
+      ${esc(prettyTag(tag))} <span style="opacity:.55">${count}</span>
+    </button>`).join("");
+
+  document.querySelectorAll("[data-flavour-tag]").forEach(btn=>btn.onclick=()=>{
+    const tag=btn.dataset.flavourTag;
+    if(selectedAdvancedFlavours.has(tag))selectedAdvancedFlavours.delete(tag);
+    else selectedAdvancedFlavours.add(tag);
+    btn.classList.toggle("active",selectedAdvancedFlavours.has(tag));
+    renderFinder();
+  });
+}
+
 rangeIds.forEach(k=>document.getElementById(k+"Range").addEventListener("input",()=>{syncRangeLabels();renderFinder()}));
 document.getElementById("finderCountry").addEventListener("input",renderFinder);
-function syncRangeLabels(){rangeIds.forEach(k=>document.getElementById(k+"Value").textContent=document.getElementById(k+"Range").value)}
+document.getElementById("finderOpenOnly").addEventListener("change",renderFinder);
+
+function syncRangeLabels(){
+  rangeIds.forEach(k=>document.getElementById(k+"Value").textContent=document.getElementById(k+"Range").value)
+}
+
 function scoreMatch(w){
   const prefs=Object.fromEntries(rangeIds.map(k=>[k,Number(document.getElementById(k+"Range").value)]));
-  let active=0,total=0;
+  let weighted=0,weight=0;
+
   for(const k of rangeIds){
     if(prefs[k]>0){
-      active++;
       const diff=Math.abs(prefs[k]-Number(w.flavourProfile[k]||0));
-      total+=Math.max(0,100-diff*20);
+      weighted+=Math.max(0,100-diff*20)*2;
+      weight+=2;
     }
   }
-  return active?Math.round(total/active):75;
+
+  if(selectedAdvancedFlavours.size){
+    const bottleTags=new Set(w.flavours.map(canonicalTag));
+    selectedAdvancedFlavours.forEach(tag=>{
+      weighted+=bottleTags.has(tag)?100:20;
+      weight+=1;
+    });
+  }
+
+  return weight?Math.round(weighted/weight):75;
 }
+
+function matchReason(w){
+  const reasons=[];
+  const labels={sweet:"sweet",smoky:"smoky / peaty",fruity:"fruity",spicy:"spicy",oaky:"rich / oaky"};
+
+  rangeIds.forEach(k=>{
+    const target=Number(document.getElementById(k+"Range").value);
+    const actual=Number(w.flavourProfile[k]||0);
+    if(target>=3 && actual>=Math.max(2,target-1))reasons.push(labels[k]);
+  });
+
+  const bottleTags=new Set(w.flavours.map(canonicalTag));
+  const matchedTags=[...selectedAdvancedFlavours].filter(t=>bottleTags.has(t)).map(prettyTag);
+  if(matchedTags.length)reasons.push(...matchedTags.slice(0,3));
+
+  if(!reasons.length){
+    return "A broad match based on the current collection. Add flavour preferences for a more specific result.";
+  }
+  return "Strong match for "+reasons.slice(0,5).join(", ")+".";
+}
+
 function renderFinder(){
   const country=document.getElementById("finderCountry").value;
-  let list=whiskeys.filter(w=>!country||w.country===country).map(w=>({w,score:scoreMatch(w)})).sort((a,b)=>b.score-a.score);
-  document.getElementById("finderResults").innerHTML=list.slice(0,12).map(({w,score},i)=>`
+  const openOnly=document.getElementById("finderOpenOnly").checked;
+
+  let list=whiskeys
+    .filter(w=>(!country||w.country===country)&&(!openOnly||w.openCount>0))
+    .map(w=>({w,score:scoreMatch(w)}))
+    .sort((a,b)=>b.score-a.score||a.w.name.localeCompare(b.w.name));
+
+  const box=document.getElementById("finderResults");
+  if(!list.length){
+    box.innerHTML='<div class="empty-state">No bottle matches those settings.</div>';
+    return;
+  }
+
+  box.innerHTML=list.slice(0,16).map(({w,score},i)=>`
     <article class="card match-card">
-      <div><div class="kicker">#${i+1} · ${esc(w.country)}</div><h3>${esc(w.name)}</h3><div class="muted">${esc(w.type)} · ${w.age?`${w.age} Years · `:""}${w.abv}% ABV</div><div class="tags">${w.flavours.slice(0,4).map(x=>`<span class="badge">${esc(x)}</span>`).join("")}</div></div>
-      <div style="text-align:right"><div class="match-score">${score}%</div><button class="btn smallbtn" onclick="openBottleById('${esc(w.id)}')">View</button></div>
+      <div>
+        <div class="kicker">#${i+1} · ${esc(w.country)}${w.region?` · ${esc(w.region)}`:""}</div>
+        <h3>${esc(w.name)}</h3>
+        <div class="muted">${esc(w.type)} · ${w.age?`${w.age} Years · `:""}${w.abv}% ABV${w.openCount?` · ${w.openCount} open`:""}</div>
+        <div class="tags">${w.flavours.slice(0,5).map(x=>`<span class="badge">${esc(x)}</span>`).join("")}</div>
+        <div class="match-reason">${esc(matchReason(w))}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="match-score">${score}%</div>
+        <button class="btn smallbtn" onclick="openBottleById('${esc(w.id)}')">View</button>
+      </div>
     </article>`).join("");
 }
-function finderRandom(){
+
+function resetFinder(){
+  document.getElementById("finderCountry").value="";
+  document.getElementById("finderOpenOnly").checked=false;
+  rangeIds.forEach(k=>document.getElementById(k+"Range").value=0);
+  selectedAdvancedFlavours.clear();
+  syncRangeLabels();
+  renderAdvancedFlavours();
+  renderFinder();
+}
+document.getElementById("finderReset").onclick=resetFinder;
+
+function finderRandom(openOnlyOverride=null){
   if(!whiskeys.length)return;
-  const w=whiskeys[Math.floor(Math.random()*whiskeys.length)];
+  const openOnly=openOnlyOverride===null?document.getElementById("finderOpenOnly").checked:openOnlyOverride;
+  const pool=whiskeys.filter(w=>!openOnly||w.openCount>0);
+  if(!pool.length){alert("No open bottles are available in the inventory data.");return}
+  const w=pool[Math.floor(Math.random()*pool.length)];
   openBottle(w);
 }
-document.getElementById("finderRandom").onclick=finderRandom;
+document.getElementById("finderRandom").onclick=()=>finderRandom();
+
+/* Finder modes */
+document.querySelectorAll("[data-finder-mode]").forEach(btn=>btn.onclick=()=>{
+  currentFinderMode=btn.dataset.finderMode;
+  document.querySelectorAll(".finder-mode").forEach(b=>{
+    b.classList.toggle("active",b===btn);
+    b.classList.toggle("ghost",b!==btn);
+  });
+  document.getElementById("finderMatchMode").classList.toggle("hidden",currentFinderMode!=="match");
+  document.getElementById("finderExploreMode").classList.toggle("hidden",currentFinderMode!=="explore");
+  document.getElementById("finderSurpriseMode").classList.toggle("hidden",currentFinderMode!=="surprise");
+  if(currentFinderMode==="explore")renderExplore();
+});
+
+/* Explore */
+["exploreCountry","exploreRegion","exploreAge","exploreAbv","exploreOpenOnly"].forEach(id=>
+  document.getElementById(id).addEventListener("input",renderExplore)
+);
+
+function renderExplore(){
+  const country=document.getElementById("exploreCountry").value;
+  const region=document.getElementById("exploreRegion").value;
+  const minAge=Number(document.getElementById("exploreAge").value||0);
+  const minAbv=Number(document.getElementById("exploreAbv").value||0);
+  const openOnly=document.getElementById("exploreOpenOnly").checked;
+
+  const list=whiskeys.filter(w=>
+    (!country||w.country===country) &&
+    (!region||w.region===region) &&
+    (!minAge||Number(w.age||0)>=minAge) &&
+    (!minAbv||Number(w.abv||0)>=minAbv) &&
+    (!openOnly||w.openCount>0)
+  ).sort((a,b)=>a.name.localeCompare(b.name));
+
+  const box=document.getElementById("exploreResults");
+  if(!list.length){
+    box.innerHTML='<div class="empty-state">Nothing on the shelf matches those filters.</div>';
+    return;
+  }
+
+  box.innerHTML=list.slice(0,30).map((w,i)=>`
+    <article class="card match-card">
+      <div>
+        <div class="kicker">#${i+1} · ${esc(w.country)}${w.region?` · ${esc(w.region)}`:""}</div>
+        <h3>${esc(w.name)}</h3>
+        <div class="muted">${w.age?`${w.age} Years · `:"NAS · "}${w.abv}% ABV · ${w.inventoryCount} bottle${w.inventoryCount===1?"":"s"}${w.openCount?` · ${w.openCount} open`:""}</div>
+        <div class="tags">${w.flavours.slice(0,5).map(x=>`<span class="badge">${esc(x)}</span>`).join("")}</div>
+      </div>
+      <button class="btn smallbtn" onclick="openBottleById('${esc(w.id)}')">View</button>
+    </article>`).join("");
+}
+
+document.getElementById("exploreReset").onclick=()=>{
+  ["exploreCountry","exploreRegion","exploreAge","exploreAbv"].forEach(id=>document.getElementById(id).value="");
+  document.getElementById("exploreOpenOnly").checked=false;
+  renderExplore();
+};
+
+/* Surprise */
+document.getElementById("surprisePick").onclick=()=>{
+  const openOnly=document.getElementById("surpriseOpenOnly").checked;
+  const pool=whiskeys.filter(w=>!openOnly||w.openCount>0);
+  const box=document.getElementById("surpriseResult");
+
+  if(!pool.length){
+    box.innerHTML='<div class="empty-state">No open bottle is available in the inventory data.</div>';
+    return;
+  }
+
+  const w=pool[Math.floor(Math.random()*pool.length)];
+  box.innerHTML=`
+    <article class="card match-card" style="text-align:left">
+      <div>
+        <div class="kicker">${esc(w.country)}${w.region?` · ${esc(w.region)}`:""}</div>
+        <h3>${esc(w.name)}</h3>
+        <div class="muted">${w.age?`${w.age} Years · `:"NAS · "}${w.abv}% ABV</div>
+        <div class="tags">${w.flavours.slice(0,5).map(x=>`<span class="badge">${esc(x)}</span>`).join("")}</div>
+      </div>
+      <button class="btn smallbtn" onclick="openBottleById('${esc(w.id)}')">View Bottle</button>
+    </article>`;
+};
 
 /* TASTINGS */
 function populateTastingSelect(){
