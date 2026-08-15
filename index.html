@@ -1219,7 +1219,8 @@ document.getElementById("mobileButton").onclick=()=>document.getElementById("mob
 document.getElementById("mobileClose").onclick=()=>document.getElementById("mobileModal").classList.remove("open");
 
 function bottleImageHTML(w,cls=""){
-  if(w.image) return `<img class="${cls}" src="${esc(w.image)}" alt="${esc(w.name)}" onerror="this.parentElement.innerHTML='<div class=&quot;whiskey-noimg&quot;>🥃</div>'">`;
+  const src = w.image || (w.id ? `${w.id}.jpg` : "");
+  if(src) return `<img class="${cls}" src="${esc(src)}" alt="${esc(w.name)}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=&quot;whiskey-noimg&quot;>🥃</div>'">`;
   return `<div class="whiskey-noimg">🥃</div>`;
 }
 
