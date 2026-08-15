@@ -91,10 +91,11 @@ header{
 }
 .nav{min-height:75px;display:flex;align-items:center;justify-content:space-between;gap:24px}
 .brand{display:flex;align-items:center;gap:12px}
-.crest{
-  width:48px;height:54px;clip-path:polygon(50% 0,95% 14%,90% 72%,50% 100%,10% 72%,5% 14%);
-  background:linear-gradient(145deg,#123d2a,#071d14);border:1px solid var(--gold);
-  display:grid;place-items:center;color:var(--gold2);font-size:23px;font-weight:700
+.brand-logo{
+  width:54px;
+  height:54px;
+  object-fit:contain;
+  flex:0 0 auto;
 }
 .brand-name{font-size:1.65rem;color:#efd8ac;line-height:1}
 .brand-est{font-size:.64rem;text-align:center;color:#d4a75e;letter-spacing:.12em;margin-top:4px;text-transform:uppercase}
@@ -409,6 +410,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 38px;margin-top:10px;back
   .stats-grid{grid-template-columns:repeat(2,1fr)}
 }
 @media(max-width:680px){
+  .brand-logo{width:46px;height:46px}
   .hero{min-height:430px}
   .hero h1{font-size:4.6rem}
   .pour{grid-template-columns:1fr}
@@ -436,7 +438,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 38px;margin-top:10px;back
 <header>
   <div class="wrap nav">
     <a class="brand" href="#home" data-route="home">
-      <div class="crest">R</div>
+      <img class="brand-logo" src="logo.png" alt="Ryan\'s Inn logo">
       <div>
         <div class="brand-name">Ryan's Inn</div>
         <div class="brand-est">Est. 2012</div>
@@ -932,7 +934,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 38px;margin-top:10px;back
     <div class="footer-grid">
       <div>
         <div class="brand" style="margin-bottom:12px">
-          <div class="crest">R</div>
+          <img class="brand-logo" src="logo.png" alt="Ryan\'s Inn logo">
           <div><div class="brand-name">Ryan's Inn</div><div class="brand-est">Est. 2012</div></div>
         </div>
         <span>Private Pub · Est. 2012</span>
